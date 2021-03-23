@@ -6,22 +6,9 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3" //ブランク識別子: 依存関係を解決するためのimport
+
+	. "taskapp/model" //modelパッケージ名を省略
 )
-
-type User struct {
-	gorm.Model // gorm.Model 構造体（ID,CreatedAt,UpdatedAt,DeletedAt）の追加
-	Name       string
-	Email      string
-	Tasks      []Task
-}
-
-type Task struct {
-	gorm.Model
-	Title    string
-	Status   string
-	Due_date time.Time
-	UserID   uint
-}
 
 func main() {
 	// connect database
@@ -29,6 +16,7 @@ func main() {
 	if err != nil {
 		panic("failed to connect database")
 	}
+
 	// Migrate the schema
 	db.AutoMigrate(&User{}, &Task{})
 
