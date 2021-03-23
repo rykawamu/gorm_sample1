@@ -61,4 +61,10 @@ func main() {
 	var users []User
 	db.Find(&users)
 	fmt.Printf("check3: %v\n", &users)
+
+	// start Echo server
+	e := newRouter()
+	// 実行
+	e.Logger.Fatal(e.Start(":1323"))
+
 }
