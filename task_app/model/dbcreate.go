@@ -16,6 +16,8 @@ type MyModel struct {
 	Db        *gorm.DB
 }
 
+var mydb *gorm.DB
+
 func (m *MyModel) connect_database() (db *gorm.DB, err error) {
 	m.Dialector = "sqlite3"
 	m.DbKind = "./db/test.db"
@@ -25,6 +27,7 @@ func (m *MyModel) connect_database() (db *gorm.DB, err error) {
 		panic("failed to connect database")
 	}
 	m.Db = db
+	mydb = db
 	return db, err
 }
 
@@ -45,10 +48,7 @@ func (m *MyModel) Init() {
 }
 
 func (m *MyModel) InsertInitData() {
-	db, err := m.connect_database()
-	if err != nil {
-		panic("failed to connect database")
-	}
+	db := mydb
 
 	// Create
 	db.Create(&User{Name: "Alice", Email: "alice@example.com",
@@ -73,10 +73,7 @@ func (m *MyModel) InsertInitData() {
 
 // 初期データのインサート情報のデバック確認用
 func (m *MyModel) InitDataPrint() {
-	db, err := m.connect_database()
-	if err != nil {
-		panic("failed to connect database")
-	}
+	db := mydb
 
 	// Read
 	var user User
