@@ -16,7 +16,9 @@ type MyModel struct {
 	Db        *gorm.DB
 }
 
-func (m *MyModel) connect_database() (db *gorm.DB, err error) {
+var mydb *gorm.DB
+
+func (m *MyModel) Connect_database() (db *gorm.DB, err error) {
 	m.Dialector = "sqlite3"
 	m.DbKind = "./db/test.db"
 
@@ -25,12 +27,13 @@ func (m *MyModel) connect_database() (db *gorm.DB, err error) {
 		panic("failed to connect database")
 	}
 	m.Db = db
+	mydb = db
 	return db, err
 }
 
 func (m *MyModel) Init() {
 	// connect database
-	db, err := m.connect_database()
+	db, err := m.Connect_database()
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -45,38 +48,32 @@ func (m *MyModel) Init() {
 }
 
 func (m *MyModel) InsertInitData() {
-	db, err := m.connect_database()
-	if err != nil {
-		panic("failed to connect database")
-	}
+	db := mydb
 
 	// Create
-	db.Create(&User{Name: "Alice", Email: "alice@example.com",
+	db.Create(&User{Name: "Alice", Email: "alice@example.com", Password: "pass1",
 		Tasks: []Task{{Title: "work1", Status: "start", Due_date: time.Now()},
 			{Title: "work2", Status: "stop", Due_date: time.Now()},
 		},
 	})
-	db.Create(&User{Name: "Betty", Email: "Betty@example.com",
+	db.Create(&User{Name: "Betty", Email: "Betty@example.com", Password: "pass2",
 		Tasks: []Task{{Title: "work3", Status: "start", Due_date: time.Now()},
 			{Title: "work1", Status: "Cancel", Due_date: time.Now()},
 		},
 	})
-	db.Create(&User{Name: "Carmichael", Email: "Carmichael@example.com",
+	db.Create(&User{Name: "Carmichael", Email: "Carmichael@example.com", Password: "pass3",
 		Tasks: []Task{{Title: "work5", Status: "start", Due_date: time.Now()},
 			{Title: "work6", Status: "Cancel", Due_date: time.Now()},
 			{Title: "work7", Status: "Cancel", Due_date: time.Now()},
 		},
 	})
-	db.Create(&User{Name: "George", Email: "George@example.com", Tasks: []Task{}})
+	db.Create(&User{Name: "George", Email: "George@example.com", Password: "pass4", Tasks: []Task{}})
 
 }
 
 // 初期データのインサート情報のデバック確認用
 func (m *MyModel) InitDataPrint() {
-	db, err := m.connect_database()
-	if err != nil {
-		panic("failed to connect database")
-	}
+	db := mydb
 
 	// Read
 	var user User

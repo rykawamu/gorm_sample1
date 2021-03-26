@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script type="text/javascript">
+            if(localStorage.getItem('token') === null) {
+                location.href = '/'
+            }
+        </script>
+        <title>Tasks</title>
+    </head>
+    <body>
+        <div id="task-list">
+            <h1>{{ user }}'s Tasks list</h1>
+            <div v-if="tasks.length === 0">
+                <p>No your tasks...</p>
+            </div>
+            <ul v-else id="task-list">
+                <li v-for="(task, index) in tasks"  :key="index">
+                    <label :for="index">{{ task.title }}</label>
+                </li>
+            </ul>
+            <button type="button" name="logout" @click="logout()">logout</button>
+        </div>
+        <script src="assets/js/tasks.js"></script>
+    </body>
+</html>
