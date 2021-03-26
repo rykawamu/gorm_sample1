@@ -39,32 +39,38 @@ func (m *MyModel) Init() {
 	}
 
 	// Migrate the schema
-	db.AutoMigrate(&User{}, &Task{})
+	db.AutoMigrate(&User{}, &Task{}, &State{})
 
 	// Delete
 	//db.Where("1 = 1").Delete(&Task{}) // gorm.DeletedAtがある場合、soft deleteになる
 	db.Exec("DELETE FROM tasks") // レコード自体を消したいなら、こっち
 	db.Exec("DELETE FROM users")
+	db.Exec("DELETE FROM states")
 }
 
 func (m *MyModel) InsertInitData() {
 	db := mydb
 
 	// Create
+	db.Create(&State{StateId: 0, StateName: "hold"})
+	db.Create(&State{StateId: 1, StateName: "start"})
+	db.Create(&State{StateId: 2, StateName: "stop"})
+	db.Create(&State{StateId: 3, StateName: "cancel"})
+
 	db.Create(&User{Name: "Alice", Email: "alice@example.com", Password: "pass1",
-		Tasks: []Task{{Title: "work1", Status: "start", Due_date: time.Now()},
-			{Title: "work2", Status: "stop", Due_date: time.Now()},
+		Tasks: []Task{{Title: "work1", StateId: 1, Due_date: time.Now()},
+			{Title: "work2", StateId: 2, Due_date: time.Now()},
 		},
 	})
 	db.Create(&User{Name: "Betty", Email: "Betty@example.com", Password: "pass2",
-		Tasks: []Task{{Title: "work3", Status: "start", Due_date: time.Now()},
-			{Title: "work1", Status: "Cancel", Due_date: time.Now()},
+		Tasks: []Task{{Title: "work3", StateId: 2, Due_date: time.Now()},
+			{Title: "work1", StateId: 3, Due_date: time.Now()},
 		},
 	})
 	db.Create(&User{Name: "Carmichael", Email: "Carmichael@example.com", Password: "pass3",
-		Tasks: []Task{{Title: "work5", Status: "start", Due_date: time.Now()},
-			{Title: "work6", Status: "Cancel", Due_date: time.Now()},
-			{Title: "work7", Status: "Cancel", Due_date: time.Now()},
+		Tasks: []Task{{Title: "work5", StateId: 0, Due_date: time.Now()},
+			{Title: "work6", StateId: 1, Due_date: time.Now()},
+			{Title: "work7", StateId: 3, Due_date: time.Now()},
 		},
 	})
 	db.Create(&User{Name: "George", Email: "George@example.com", Password: "pass4", Tasks: []Task{}})

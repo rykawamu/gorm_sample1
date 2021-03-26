@@ -16,6 +16,7 @@ func GetTasks(c echo.Context) error {
 		return echo.ErrNotFound
 	}
 
-	tasks := mymodel.FindTasks(&mymodel.Task{UserID: uint(uid)})
+	//	tasks := mymodel.FindTasks(&mymodel.Task{UserID: uint(uid)})
+	tasks := mymodel.FindTaskResults(&mymodel.Task{UserID: uint(uid)})
 	return c.JSON(http.StatusOK, tasks)
 }

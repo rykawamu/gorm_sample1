@@ -19,6 +19,8 @@
             <ul v-else id="task-list">
                 <li v-for="(task, index) in tasks"  :key="index">
                     <label :for="index">{{ task.title }}</label>
+                    <label :for="index">[{{ task.stateid }}:</label>
+                    <label :for="index">{{ task.statename }}]</label>
                 </li>
             </ul>
             <button type="button" name="logout" @click="logout()">logout</button>
